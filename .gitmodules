@@ -1,0 +1,3 @@
+[submodule "pythonrouge"]
+	path = pythonrouge
+	url = git@github.com:pltrdy/pythonrouge.git
