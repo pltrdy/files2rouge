@@ -187,8 +187,7 @@ def main():
   parser.add_argument('--verbose', dest='verbose', action='store_true')
   parser.add_argument('--no-verbose', dest='verbose', action='store_false')
 
-  parser.set_defaults(verbose=False)
-  parser.set_defaults(avg=True)
+  parser.set_defaults(verbose=True)
   
   args = parser.parse_args()
 
