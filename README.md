@@ -1,5 +1,6 @@
 # Files2ROUGE
-Multi-threaded ROUGE scoring
+Multi-threaded ROUGE scoring.   
+It uses [pythonrouge](https://github.com/pltrdy/pythonrouge).   
 
 ## Motivations
 Computing ROUGE score between an automatically generated summary and a reference file.
@@ -7,12 +8,10 @@ Computing ROUGE score between an automatically generated summary and a reference
 ## Getting Started
 **1) Clone the repo & get submodules**
 ```bash
-git clone git@github.com:pltrdy/files2rouge.git     
+git clone --recursive git@github.com:pltrdy/files2rouge.git     
 cd files2rouge
-git submodule init
-git submodule update
 ```
-
+(If you want to install `pythonrouge` run `cd pythonrouge && sudo pip install .`)
 **2) Run `files2rouge.py`** 
 ```bash
 ./files2rouge.py --ref references.txt --summ summary.txt --verbose
