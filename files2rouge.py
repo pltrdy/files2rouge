@@ -199,9 +199,9 @@ def main():
   scores, lines = RougeFromFiles(ref_path, summ_path, verbose=verbose).run()
   etime = time() - stime
 
-  log("\n\nEvaluated %d ref/summary pairs in %.3f seconds (%.3f lines/sec)" % (lines, etime, lines/etime))
+  print("\n\nEvaluated %d ref/summary pairs in %.3f seconds (%.3f lines/sec)" % (lines, etime, lines/etime))
   for s in ["ROUGE-1", "ROUGE-2", "ROUGE-3", "ROUGE-L", "ROUGE-SU4"]:
-    log("%s: %f" % (s, np.mean(scores[s])))
+    print("%s: %f" % (s, np.mean(scores[s])))
 
 
 if __name__ == '__main__':
