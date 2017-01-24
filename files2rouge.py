@@ -9,7 +9,7 @@
   - 1 consumer, get current line value, storing it and printing logs
 
   Usage
-    python rouge_files.py [-h] --ref REFERENCES_PATH --summ SUMMARIES_PATH 
+    python rouge_files.py [-h] SUMMARIES_PATH REFERENCES_PATH 
                   [--verbose] [--no-verbose]
                   [--avg] [--no-avg] 
                   [--progress] [--no-progress]
@@ -182,8 +182,8 @@ def main():
 
   parser = argparse.ArgumentParser(description="Multithreaded line by line ROUGE score of two files.")
 
-  parser.add_argument('--ref', help="Full ref file", required=True)
-  parser.add_argument('--summ', help="Summaries", required=True)
+  parser.add_argument("summary", help="Path of summary files")
+  parser.add_argument("reference", help="Path of references files")
   parser.add_argument('--verbose', dest='verbose', action='store_true')
   parser.add_argument('--no-verbose', dest='verbose', action='store_false')
 
@@ -191,8 +191,8 @@ def main():
   
   args = parser.parse_args()
 
-  ref_path = args.ref
-  summ_path = args.summ
+  ref_path = args.reference
+  summ_path = args.summary
   verbose = args.verbose
 
   stime = time()
