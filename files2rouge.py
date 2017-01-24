@@ -60,7 +60,7 @@ class RougeFromFiles:
        * summ_path: path to summaries path
        * verbose: set to see progress/speed/remaining time printed on LOGTO 
        * print_score: set to output each line scores to stdout.
-           format (separated by tabs): nline, R-1, R-2, R-3, R-SUA, R-L           
+           format (separated by tabs): nline, R-1, R-2, R-3, R-S4, R-L
   """
   def __init__(self, ref_path, summ_path, verbose=False, print_scores=False):
     self.ref_path = ref_path
@@ -139,7 +139,7 @@ class RougeFromFiles:
     print_scores, verbose = self.print_scores, self.verbose
     self.prerun()
 
-    scores = {"ROUGE-1": [], "ROUGE-2": [], "ROUGE-3": [], "ROUGE-SU4": [], "ROUGE-L": []}
+    scores = {"ROUGE-1": [], "ROUGE-2": [], "ROUGE-3": [], "ROUGE-S4": [], "ROUGE-L": []}
     
     q.cancel_join_thread()
     _verbose = verbose
@@ -171,7 +171,7 @@ class RougeFromFiles:
         if verbose and sys.stdout.isatty() and sys.stderr.isatty():
           print("") 
         print("%d\t%f\t%f\t%f\t%f\t%f"
-          % (line, score["ROUGE-1"], score["ROUGE-2"], score["ROUGE-3"], score["ROUGE-SU4"], score["ROUGE-L"]))
+          % (line, score["ROUGE-1"], score["ROUGE-2"], score["ROUGE-3"], score["ROUGE-S4"], score["ROUGE-L"]))
 
     q.close()
     shared["scores"] = scores
@@ -200,7 +200,7 @@ def main():
   etime = time() - stime
 
   print("\n\nEvaluated %d ref/summary pairs in %.3f seconds (%.3f lines/sec)" % (lines, etime, lines/etime))
-  for s in ["ROUGE-1", "ROUGE-2", "ROUGE-3", "ROUGE-L", "ROUGE-SU4"]:
+  for s in ["ROUGE-1", "ROUGE-2", "ROUGE-3", "ROUGE-L", "ROUGE-S4"]:
     print("%s: %f" % (s, np.mean(scores[s])))
 
 
