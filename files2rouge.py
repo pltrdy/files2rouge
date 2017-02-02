@@ -28,12 +28,12 @@ from pythonrouge import pythonrouge
 
 ROUGE_path='./pythonrouge/RELEASE-1.5.5/ROUGE-1.5.5.pl'
 ROUGE_data_path='./pythonrouge/RELEASE-1.5.5/data'
-def get_rouge(reference, summary):
+def get_rouge(reference, summary, score="F"):
     """Computing ROUGE score for a reference/summary pair
     """
-    score = pythonrouge.pythonrouge(reference, summary,
+    scores = pythonrouge.pythonrouge(reference, summary,
       ROUGE_path=ROUGE_path, data_path=ROUGE_data_path)
-    return score
+    return scores[score]
 
 def fltohm(seconds):
   """Take a number of seconds (float) and return string "hours minutes"
@@ -62,11 +62,12 @@ class RougeFromFiles:
        * print_score: set to output each line scores to stdout.
            format (separated by tabs): nline, R-1, R-2, R-3, R-S4, R-L
   """
-  def __init__(self, ref_path, summ_path, verbose=False, print_scores=False):
+  def __init__(self, ref_path, summ_path, verbose=False, print_scores=False, score="F"):
     self.ref_path = ref_path
     self.summ_path = summ_path
     self.verbose = verbose
     self.print_scores = print_scores
+    self.score = score
     
     self._check_paths()
   
@@ -133,7 +134,7 @@ class RougeFromFiles:
     return ret
 
   def _producer(self, q, line, ref, summ):
-    q.put([line, ref, summ, get_rouge(ref, summ)])
+    q.put([line, ref, summ, get_rouge(ref, summ, score=self.score)])
 
   def _consumer(self, q, shared):
     print_scores, verbose = self.print_scores, self.verbose
@@ -182,8 +183,9 @@ def main():
 
   parser = argparse.ArgumentParser(description="Multithreaded line by line ROUGE score of two files.")
 
-  parser.add_argument("summary", help="Path of summary files")
-  parser.add_argument("reference", help="Path of references files")
+  parser.add_argument("summary", help="Path of summary file")
+  parser.add_argument("reference", help="Path of references file")
+  parser.add_argument("--score", dest="score", help="Rouge Variant (F1, Recall, Precision)", choices=["F", "R", "P"], default="F")
   parser.add_argument('--verbose', dest='verbose', action='store_true')
   parser.add_argument('--no-verbose', dest='verbose', action='store_false')
 
@@ -194,14 +196,15 @@ def main():
   ref_path = args.reference
   summ_path = args.summary
   verbose = args.verbose
+  score = args.score
 
   stime = time()
-  scores, lines = RougeFromFiles(ref_path, summ_path, verbose=verbose).run()
+  scores, lines = RougeFromFiles(ref_path, summ_path, verbose=verbose, score=score).run()
   etime = time() - stime
 
   print("\n\nEvaluated %d ref/summary pairs in %.3f seconds (%.3f lines/sec)" % (lines, etime, lines/etime))
   for s in ["ROUGE-1", "ROUGE-2", "ROUGE-3", "ROUGE-L", "ROUGE-S4"]:
-    print("%s: %f" % (s, np.mean(scores[s])))
+    print("%s (%s): %f" % (s, score, np.mean(scores[s])))
 
 
 if __name__ == '__main__':

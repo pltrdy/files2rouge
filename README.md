@@ -6,6 +6,24 @@ See [ROUGE Official website]() as well as [this paper about ROUGE variants](http
 ## Motivations
 Computing ROUGE score between an automatically generated summary and a reference file.
 
+```shell
+$./files2rouge.py -h
+usage: files2rouge.py [-h] [--score {F,R,P}] [--verbose] [--no-verbose]
+                      summary reference
+
+Multithreaded line by line ROUGE score of two files.
+
+positional arguments:
+  summary          Path of summary file
+  reference        Path of references file
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --score {F,R,P}  Rouge Variant (F1, Recall, Precision)
+  --verbose
+  --no-verbose
+```
+
 ## Getting Started
 **1) Clone the repo & get submodules**
 ```bash
