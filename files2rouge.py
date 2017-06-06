@@ -119,7 +119,14 @@ class RougeFromFiles:
     proc = []
     for count, (ref, summ) in enumerate(self.files_reader()):
       proc.append(Process(target=self._producer, args=(q, count, ref, summ)))
-      proc[-1].start()
+      while True:
+        try:
+          proc[-1].start()
+          break
+        except Exception, e:
+          print("Error starting producer")
+          print(e)
+          sleep(0.5)
 
     def join_if_alive(process):
       if process.is_alive():
