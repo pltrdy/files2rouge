@@ -25,15 +25,15 @@ optional arguments:
 ```
 
 ## Getting Started
-**1) Clone the repo & get submodules**
+**1) Clone the repo and setup**
 ```bash
-git clone --recursive https://github.com/pltrdy/files2rouge.git     
+git clone https://github.com/pltrdy/files2rouge.git     
 cd files2rouge
+python setup.py install
 ```
-(If you want to install `pythonrouge` run `cd pythonrouge && sudo pip install .`)    
 **2) Run `files2rouge.py`** 
 ```bash
-./files2rouge.py summaries.txt references.txt --verbose 
+files2rouge summaries.txt references.txt --verbose 
 ```
 
 **Outputs:**

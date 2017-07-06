@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
   Multithreaded line by line ROUGE Scoring.
@@ -17,7 +17,7 @@
   Written in January, 2017 by pltrdy <pltrdy@gmail.com>
   on https://github.com/pltrdy/pythonrouge
 """
-
+from __future__ import absolute_import
 from __future__ import print_function, division
 from multiprocessing import Process, Queue, Manager
 import sys
@@ -123,7 +123,7 @@ class RougeFromFiles:
         try:
           proc[-1].start()
           break
-        except Exception, e:
+        except Exception as e:
           print("Error starting producer")
           print(e)
           sleep(0.5)
