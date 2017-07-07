@@ -4,9 +4,16 @@
   Multithreaded line by line ROUGE Scoring.
   
   ROUGE scoring for each lines from `ref_path` and `summ_path`
-  in parrallel with:
+  in parrallel.
   - n producers, putting ROUGE score in queue using pythonrouge
   - 1 consumer, get current line value, storing it and printing logs
+
+  We haven't found any case where the consumer is the bottleneck, thus,
+  keeping a single process consumer make sense.
+
+  In addition, we give each producers not a single (ref, sum) pair
+  but instead a "chunk" of `chunk_size` pairs. We did this to avoid having
+  too much producer process, which can raise error (e.g.Too many opened file)
 
   Usage
     python rouge_files.py [-h] SUMMARIES_PATH REFERENCES_PATH 
@@ -95,19 +102,29 @@ class RougeFromFiles:
     print("Refs: %d lines\tSummaries: %d lines" % (self.ref_len, self.summ_len))
 
 
-  def files_reader(self):
+  def files_reader(self, chunk_size):
     """ (ref, summ) pairs generator
     """
     ref_file = open(self.ref_path)
     summ_file = open(self.summ_path)
 
-    while True:
-      ref = ref_file.readline()
-      summ = summ_file.readline()
+    done = False
+    count = 0
+    while not done:
+      refs = []
+      summs = []
+      for count in range(chunk_size):
+        ref = ref_file.readline()
+        summ = summ_file.readline()
 
-      if not ref or not summ:
-        break
-      yield (ref, summ)
+        if not ref or not summ:
+          done = True
+          break
+
+        refs += [ref]
+        summs += [summ]
+
+      yield (len(refs), refs, summs)
 
 
   def run(self):
@@ -120,8 +137,11 @@ class RougeFromFiles:
     consumer.start()
 
     proc = []
-    for count, (ref, summ) in enumerate(self.files_reader()):
-      proc.append(Process(target=self._producer, args=(q, count, ref, summ)))
+    chunk_size = 64
+    count = 0
+    for (n, refs, summs) in self.files_reader(chunk_size):
+      proc.append(Process(target=self._producer, args=(q, count, refs, summs)))
+      count += n
       while True:
         try:
           proc[-1].start()
@@ -131,7 +151,7 @@ class RougeFromFiles:
           print(e)
           sleep(0.5)
 
-    def join_if_alive(process):
+  def join_if_alive(process):
       if process.is_alive():
         process.join()
 
@@ -143,8 +163,9 @@ class RougeFromFiles:
     ret = (shared["scores"], shared["count"])
     return ret
 
-  def _producer(self, q, line, ref, summ):
-    q.put([line, ref, summ, get_rouge(ref, summ, self.rouge_settings, score=self.score)])
+  def _producer(self, q, count, refs, summs):
+    for (c, (ref, summ)) in enumerate(zip(refs, summs)):
+      q.put_nowait([count+c, ref, summ, get_rouge(ref, summ, self.rouge_settings, score=self.score)])
 
   def _consumer(self, q, shared):
     print_scores, verbose = self.print_scores, self.verbose
@@ -156,6 +177,9 @@ class RougeFromFiles:
     _verbose = verbose
     count = 0
     while True:
+      #can be helful to figure out which of (producer, consumer) is the bottleneck
+      #in practice the producer is i.e. the consumer waits a lot.
+      #print(q.qsize())
       data = q.get()
       if data is None:
         break
