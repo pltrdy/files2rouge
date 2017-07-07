@@ -7,11 +7,11 @@ See [ROUGE Official website]() as well as [this paper about ROUGE variants](http
 Computing ROUGE score between an automatically generated summary and a reference file.
 
 ```shell
-$./files2rouge.py -h
+$ files2rouge -h
 usage: files2rouge.py [-h] [--score {F,R,P}] [--verbose] [--no-verbose]
                       summary reference
 
-Multithreaded line by line ROUGE score of two files.
+Calculating ROUGE score between two files (line-by-line)
 
 positional arguments:
   summary          Path of summary file
@@ -25,12 +25,15 @@ optional arguments:
 ```
 
 ## Getting Started
-**1) Clone the repo and setup**
+**1) Clone the repo, setup the module and ROUGE**
 ```bash
 git clone https://github.com/pltrdy/files2rouge.git     
 cd files2rouge
 python setup.py install
+python setup_rouge.py
 ```
+**Do not forget to run `setup_rouge`**    
+
 **2) Run `files2rouge.py`** 
 ```bash
 files2rouge summaries.txt references.txt --verbose 
@@ -50,6 +53,6 @@ At the end, metrcis averages are printed:
 ## More informations
 * **Use cases:**
   * [Text Summarization using OpenNMT](./experiments/openNMT.0.md)
-* About `files2rouge.py`: run `./files2rouge.py --help`
+* About `files2rouge.py`: run `files2rouge.py --help`
 * About ROUGE Metric: [project webpage](http://www.berouge.com/Pages/default.aspx)
 

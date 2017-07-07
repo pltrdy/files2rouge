@@ -25,9 +25,10 @@ setup(
       ]
     },
     install_requires = [
-      "pythonrouge"
+      "pythonrouge==0.3"
     ],
     dependency_links = [
-     "http://github.com/pltrdy/pythonrouge/tarball/0.3#egg=pythonrouge-0.3",
+     "https://github.com/pltrdy/pythonrouge/tarball/0.3#egg=pythonrouge-0.3",
     ],
+    include_package_data=True,
 )

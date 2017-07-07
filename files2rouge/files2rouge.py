@@ -25,14 +25,16 @@ import os
 import numpy as np
 from time import time, sleep
 from pythonrouge import pythonrouge
+from files2rouge import settings
 
-ROUGE_path='./pythonrouge/RELEASE-1.5.5/ROUGE-1.5.5.pl'
-ROUGE_data_path='./pythonrouge/RELEASE-1.5.5/data'
-def get_rouge(reference, summary, score="F"):
+def get_rouge(reference, summary, rouge_settings, score="F"):
     """Computing ROUGE score for a reference/summary pair
     """
+    ROUGE_path = rouge_settings.data['ROUGE_path']
+    ROUGE_data = rouge_settings.data['ROUGE_data']
     scores = pythonrouge.pythonrouge(reference, summary,
-      ROUGE_path=ROUGE_path, data_path=ROUGE_data_path)
+      ROUGE_path=ROUGE_path, data_path=ROUGE_data)
+
     return scores[score]
 
 def fltohm(seconds):
@@ -62,12 +64,13 @@ class RougeFromFiles:
        * print_score: set to output each line scores to stdout.
            format (separated by tabs): nline, R-1, R-2, R-3, R-S4, R-L
   """
-  def __init__(self, ref_path, summ_path, verbose=False, print_scores=False, score="F"):
+  def __init__(self, ref_path, summ_path, rouge_settings, verbose=False, print_scores=False, score="F"):
     self.ref_path = ref_path
     self.summ_path = summ_path
     self.verbose = verbose
     self.print_scores = print_scores
     self.score = score
+    self.rouge_settings = rouge_settings
     
     self._check_paths()
   
@@ -141,7 +144,7 @@ class RougeFromFiles:
     return ret
 
   def _producer(self, q, line, ref, summ):
-    q.put([line, ref, summ, get_rouge(ref, summ, score=self.score)])
+    q.put([line, ref, summ, get_rouge(ref, summ, self.rouge_settings, score=self.score)])
 
   def _consumer(self, q, shared):
     print_scores, verbose = self.print_scores, self.verbose
@@ -188,7 +191,7 @@ class RougeFromFiles:
 def main():
   import argparse
 
-  parser = argparse.ArgumentParser(description="Multithreaded line by line ROUGE score of two files.")
+  parser = argparse.ArgumentParser(description="Calculating ROUGE score between two files (line-by-line)")
 
   parser.add_argument("summary", help="Path of summary file")
   parser.add_argument("reference", help="Path of references file")
@@ -205,8 +208,11 @@ def main():
   verbose = args.verbose
   score = args.score
 
+  s = settings.Settings()
+  s._load()
+
   stime = time()
-  scores, lines = RougeFromFiles(ref_path, summ_path, verbose=verbose, score=score).run()
+  scores, lines = RougeFromFiles(ref_path, summ_path, s,verbose=verbose, score=score).run()
   etime = time() - stime
 
   print("\n\nEvaluated %d ref/summary pairs in %.3f seconds (%.3f lines/sec)" % (lines, etime, lines/etime))
