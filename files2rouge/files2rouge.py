@@ -151,7 +151,7 @@ class RougeFromFiles:
           print(e)
           sleep(0.5)
 
-  def join_if_alive(process):
+    def join_if_alive(process):
       if process.is_alive():
         process.join()
 
@@ -222,7 +222,7 @@ def main():
   parser.add_argument("--score", dest="score", help="Rouge Variant (F1, Recall, Precision)", choices=["F", "R", "P"], default="F")
   parser.add_argument('--verbose', dest='verbose', action='store_true')
   parser.add_argument('--no-verbose', dest='verbose', action='store_false')
-
+  parser.add_argument('--saveto', dest="saveto", help="File to save scores")
   parser.set_defaults(verbose=True)
   
   args = parser.parse_args()
@@ -231,6 +231,9 @@ def main():
   summ_path = args.summary
   verbose = args.verbose
   score = args.score
+  saveto = args.saveto
+
+  saveto = open(saveto, 'w')
 
   s = settings.Settings()
   s._load()
@@ -239,10 +242,16 @@ def main():
   scores, lines = RougeFromFiles(ref_path, summ_path, s,verbose=verbose, score=score).run()
   etime = time() - stime
 
-  print("\n\nEvaluated %d ref/summary pairs in %.3f seconds (%.3f lines/sec)" % (lines, etime, lines/etime))
-  for s in ["ROUGE-1", "ROUGE-2", "ROUGE-3", "ROUGE-L", "ROUGE-S4"]:
-    print("%s (%s): %f" % (s, score, np.mean(scores[s])))
+  def tee(*args, **kwargs):
+    """Mimic the tee command, write on both stdout and file
+    """
+    print(*args, **kwargs)
+    if saveto is not None:
+      print(*args, **kwargs, file=saveto)
 
+  tee("\n\nEvaluated %d ref/summary pairs in %.3f seconds (%.3f lines/sec)" % (lines, etime, lines/etime))
+  for s in ["ROUGE-1", "ROUGE-2", "ROUGE-3", "ROUGE-L", "ROUGE-S4"]:
+    tee("%s (%s): %f" % (s, score, np.mean(scores[s])))
 
 if __name__ == '__main__':
   main()
