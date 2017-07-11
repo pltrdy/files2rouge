@@ -233,7 +233,8 @@ def main():
   score = args.score
   saveto = args.saveto
 
-  saveto = open(saveto, 'w')
+  if saveto is not None:
+    saveto = open(saveto, 'w')
 
   s = settings.Settings()
   s._load()
