@@ -25,12 +25,19 @@ optional arguments:
 ```
 
 ## Getting Started
+**0) Pre-requisites**
+```bash
+git clone https://github.com/pltrdy/pythonrouge.git
+cd pythonrouge
+python setup.py install
+```
+
 **1) Clone the repo, setup the module and ROUGE**
 ```bash
 git clone https://github.com/pltrdy/files2rouge.git     
 cd files2rouge
-python setup.py install
 python setup_rouge.py
+python setup.py install
 ```
 **Do not forget to run `setup_rouge`**    
 

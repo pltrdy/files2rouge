@@ -15,9 +15,14 @@ class Settings:
     self.path = _default_path() if path is None else path
 
   def _load(self):
-    with open(self.path, 'r') as f:
-        data = json.load(f)
-    self.set_data(data)
+    try:
+        with open(self.path, 'r') as f:
+            data = json.load(f)
+        self.set_data(data)
+    except IOError:
+        print("Can't load ROUGE settings in '%s'. Check that the file exists or initialize it with 'setup_rouge.py'" % self.path)
+        exit()
+
 
   def _generate(self, data):
     self.set_data(data)

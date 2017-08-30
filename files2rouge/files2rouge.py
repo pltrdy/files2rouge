@@ -31,8 +31,8 @@ import sys
 import os
 import numpy as np
 from time import time, sleep
-from pythonrouge import pythonrouge
-from files2rouge import settings
+import pythonrouge
+import files2rouge.settings as settings
 
 def get_rouge(reference, summary, rouge_settings, score="F"):
     """Computing ROUGE score for a reference/summary pair

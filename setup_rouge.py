@@ -1,5 +1,9 @@
 #!/usr/bin/env python
+"""
+    Utility to copy ROUGE script.
+    It has to be run before `setup.py`
 
+"""
 from files2rouge import settings
 import os
 import shutil
@@ -13,7 +17,7 @@ def copy_ROUGE():
   default_root = os.path.join(home, '.files2rouge/')
 
   print("files2rouge uses scripts and tools that will not be stored with the python package")
-  path = input("where do you want to save it? [default: %s]" % default_root)
+  path = raw_input("where do you want to save it? [default: %s]" % default_root)
 
   if path == "": 
     path = default_root
