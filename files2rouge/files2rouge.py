@@ -248,7 +248,7 @@ def main():
     """
     print(*args, **kwargs)
     if saveto is not None:
-      print(*args, **kwargs, file=saveto)
+      print(file=saveto, *args, **kwargs)
 
   tee("\n\nEvaluated %d ref/summary pairs in %.3f seconds (%.3f lines/sec)" % (lines, etime, lines/etime))
   for s in ["ROUGE-1", "ROUGE-2", "ROUGE-3", "ROUGE-L", "ROUGE-S4"]:
