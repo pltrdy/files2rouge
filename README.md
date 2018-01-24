@@ -1,27 +1,24 @@
 # Files2ROUGE
-Multi-threaded ROUGE scoring.   
-It uses [pythonrouge](https://github.com/pltrdy/pythonrouge).   
-See [ROUGE Official website]() as well as [this paper about ROUGE variants](http://83.212.103.151/~mkalochristianakis/techNotes/ipromo/rougen5.pdf)
-
 ## Motivations
-Computing ROUGE score between an automatically generated summary and a reference file.
+Given two files with the same number of lines, `files2rouge` calculates the average ROUGE scores of each sequence (=line). Each sequence may contain multiple sentences. In this case, the end of sentence string must be passed using the `--eos` flag (default: "."). Running `files2rouge` with a wrong eos delimiter may lead to incorrect ROUGE-L score.
 
 ```shell
 $ files2rouge -h
-usage: files2rouge.py [-h] [--score {F,R,P}] [--verbose] [--no-verbose]
-                      summary reference
+usage: files2rouge [-h] [-v] [-s SAVETO] [-e EOS] summary reference
 
 Calculating ROUGE score between two files (line-by-line)
 
 positional arguments:
-  summary          Path of summary file
-  reference        Path of references file
+  summary               Path of summary file
+  reference             Path of references file
 
 optional arguments:
-  -h, --help       show this help message and exit
-  --score {F,R,P}  Rouge Variant (F1, Recall, Precision)
-  --verbose
-  --no-verbose
+  -h, --help            show this help message and exit
+  -v, --verbose         Prints ROUGE logs
+  -s SAVETO, --saveto SAVETO
+                        File to save scores
+  -e EOS, --eos EOS     End of sentence separator (for multisentence).
+                        Default: "."
 ```
 
 ## Getting Started
@@ -43,23 +40,44 @@ python setup.py install
 
 **2) Run `files2rouge.py`** 
 ```bash
-files2rouge summaries.txt references.txt --verbose 
+files2rouge summaries.txt references.txt
 ```
 
 **Outputs:**
-When `--verbose` is set, the script prints progress and remaining time on `stderr`.   
-At the end, metrcis averages are printed:
-- ROUGE-1
-- ROUGE-2
-- ROUGE-3
-- ROUGE-L
-- ROUGE-S4
+When `--verbose` is set, the script prints progress and remaining time on `stderr`.  This can be changed using `--verbose` in order to outputs ROUGE execution logs. 
 
-[More information about ROUGE metric](http://83.212.103.151/~mkalochristianakis/techNotes/ipromo/rougen5.pdf)
+Default output example:
+```
+Preparing documents...
+Running ROUGE...
+---------------------------------------------
+1 ROUGE-1 Average_R: 0.28242 (95%-conf.int. 0.25721 - 0.30877)
+1 ROUGE-1 Average_P: 0.30157 (95%-conf.int. 0.27114 - 0.33506)
+1 ROUGE-1 Average_F: 0.28196 (95%-conf.int. 0.25704 - 0.30722)
+---------------------------------------------
+1 ROUGE-2 Average_R: 0.10395 (95%-conf.int. 0.08298 - 0.12600)
+1 ROUGE-2 Average_P: 0.11458 (95%-conf.int. 0.08873 - 0.14023)
+1 ROUGE-2 Average_F: 0.10489 (95%-conf.int. 0.08303 - 0.12741)
+---------------------------------------------
+1 ROUGE-L Average_R: 0.25231 (95%-conf.int. 0.22709 - 0.27771)
+1 ROUGE-L Average_P: 0.26830 (95%-conf.int. 0.23834 - 0.29818)
+1 ROUGE-L Average_F: 0.25142 (95%-conf.int. 0.22741 - 0.27533)
+
+Elapsed time: 0.458 secondes
+
+```
+
+## ROUGE Args
+One can specify which ROUGE args to use using the flag `--args` (or `-a`).    
+The default behavior is equivalent to: 
+```
+files2rouge summary.txt reference.txt -a "-c 95 -r 1000 -n 2 -a" # be sure to write args betwen double-quotes
+```
+You can find more informations about these arguments [here](./files2rouge/RELEASE-1.5.5/README.txt)
 
 ## More informations
+* [ROUGE Original Paper (Lin 2004)](http://www.aclweb.org/anthology/W04-1013)
+* [ROUGE-1.5.5/README.txt](./files2rouge/RELEASE-1.5.5/README.txt)
 * **Use cases:**
   * [Text Summarization using OpenNMT](./experiments/openNMT.0.md)
 * About `files2rouge.py`: run `files2rouge.py --help`
-* About ROUGE Metric: [project webpage](http://www.berouge.com/Pages/default.aspx)
-
