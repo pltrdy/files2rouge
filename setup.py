@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version="1.0.0"
+version="2.0.0"
 setup(
     name="files2rouge",
     version=version,
@@ -25,10 +25,7 @@ setup(
       ]
     },
     install_requires = [
-      "pythonrouge==0.3"
-    ],
-    dependency_links = [
-     "https://github.com/pltrdy/pythonrouge/tarball/0.3#egg=pythonrouge-0.3",
+      "pyrouge==0.1.3"
     ],
     include_package_data=True,
 )
