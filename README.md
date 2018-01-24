@@ -67,7 +67,7 @@ Elapsed time: 0.458 secondes
 
 ```
 
-## ROUGE Args
+## ROUGE Args
 One can specify which ROUGE args to use using the flag `--args` (or `-a`).    
 The default behavior is equivalent to: 
 ```
