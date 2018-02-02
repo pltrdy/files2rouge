@@ -7,7 +7,19 @@
 from files2rouge import settings
 import os
 import shutil
+import sys
 
+
+def get_input(*args, **kwargs):
+    # Support Python 2 and 3 input
+    # Default to Python 3's input()
+    fct = input
+
+    # If this is Python 2, use raw_input()
+    if sys.version_info[:2] <= (2, 7):
+        fct = raw_input
+
+    return fct(*args, **kwargs)
 
 def copy_ROUGE():
   home = os.environ['HOME']
@@ -17,7 +29,7 @@ def copy_ROUGE():
   default_root = os.path.join(home, '.files2rouge/')
 
   print("files2rouge uses scripts and tools that will not be stored with the python package")
-  path = raw_input("where do you want to save it? [default: %s]" % default_root)
+  path = get_input("where do you want to save it? [default: %s]" % default_root)
 
   if path == "": 
     path = default_root
