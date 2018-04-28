@@ -8,8 +8,8 @@
     One can save score to a file using `--saveto`
 
     Usage:
-        files2rouge -h 
- 
+        files2rouge -h
+
 """
 from __future__ import absolute_import
 from __future__ import print_function, division
@@ -60,9 +60,9 @@ def main():
                 system_dir=sys_root,
                 eos=args.eos)
     print("Running ROUGE...")
-    log_level = logging.ERROR if not verbose else None
-    r = pyrouge.Rouge155(rouge_dir=os.path.dirname(s.data['ROUGE_path']),
-                         log_level=log_level)
+    # Hotfix for: https://github.com/pltrdy/files2rouge/issues/8
+    #log_level = logging.ERROR if not verbose else None
+    r = pyrouge.Rouge155(rouge_dir=os.path.dirname(s.data['ROUGE_path']))
     r.system_dir = sys_root
     r.model_dir = model_root
     r.system_filename_pattern = 's.(\d+).txt'
