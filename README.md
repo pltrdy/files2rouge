@@ -22,6 +22,13 @@ optional arguments:
 ```
 
 ## Getting Started
+**0) Install prerequisites**
+```bash
+pip install --U git+https://github.com/pltrdy/pyrouge
+```
+(**NOTE:** running `pip install pyrouge` would not work as the package is out of date on PyPI)
+
+
 **1) Clone the repo, setup the module and ROUGE**
 ```bash
 git clone https://github.com/pltrdy/files2rouge.git     

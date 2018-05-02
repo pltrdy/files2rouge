@@ -25,7 +25,6 @@ setup(
       ]
     },
     install_requires = [
-      "pyrouge==0.1.3"
     ],
     include_package_data=True,
 )
