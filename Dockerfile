@@ -9,7 +9,7 @@ RUN apt-get update && \
 COPY . /etc/rouge
 WORKDIR /etc/rouge
 
-RUN pip install pyrouge && \
+RUN pip install -U git+https://github.com/pltrdy/pyrouge && \
     echo | python setup_rouge.py && \
     python setup.py install
 
