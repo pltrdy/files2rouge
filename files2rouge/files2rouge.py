@@ -8,8 +8,8 @@
     One can save score to a file using `--saveto`
 
     Usage:
-        files2rouge -h 
- 
+        files2rouge -h
+
 """
 from __future__ import absolute_import
 from __future__ import print_function, division
