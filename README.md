@@ -75,6 +75,9 @@ files2rouge summary.txt reference.txt -a "-c 95 -r 1000 -n 2 -a" # be sure to wr
 ```
 You can find more informations about these arguments [here](./files2rouge/RELEASE-1.5.5/README.txt)
 
+## Known issues
+* `ROUGE-1.5.5.pl - XML::Parser dependency error`: see [issue #9](https://github.com/pltrdy/files2rouge/issues/9).
+
 ## More informations
 * [ROUGE Original Paper (Lin 2004)](http://www.aclweb.org/anthology/W04-1013)
 * [ROUGE-1.5.5/README.txt](./files2rouge/RELEASE-1.5.5/README.txt)
