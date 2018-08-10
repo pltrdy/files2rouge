@@ -24,7 +24,7 @@ optional arguments:
 ## Getting Started
 **0) Install prerequisites**
 ```bash
-pip install --U git+https://github.com/pltrdy/pyrouge
+pip install -U git+https://github.com/pltrdy/pyrouge
 ```
 (**NOTE:** running `pip install pyrouge` would not work as the package is out of date on PyPI)
 
