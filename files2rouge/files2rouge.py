@@ -33,7 +33,7 @@ def main():
     parser.add_argument('-s', '--saveto', dest="saveto", help="File to save scores")
     parser.add_argument('-e', '--eos', dest="eos", default='.',
                         help="""End of sentence separator (for multisentence).
-                            Default: \".\"""")
+                            Default: \".\" """)
     args = parser.parse_args()
 
     ref_path = args.reference
@@ -82,7 +82,7 @@ def main():
     output = r.convert_and_evaluate(rouge_args=rouge_args_str)
 
     utils.tee(saveto, output)
-    print("Elapsed time: %.3f secondes" % (time() - stime))
+    print("Elapsed time: %.3f seconds" % (time() - stime))
 
 if __name__ == '__main__':
     main()
