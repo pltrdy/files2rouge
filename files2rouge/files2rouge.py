@@ -17,30 +17,18 @@ from files2rouge import settings
 from files2rouge import utils
 from time import time
 import os
-import sys
 import pyrouge
 import tempfile
 import logging
 import argparse
 
-def main():
-    parser = argparse.ArgumentParser(description="Calculating ROUGE score between two files (line-by-line)")
-    parser.add_argument("summary", help="Path of summary file")
-    parser.add_argument("reference", help="Path of references file")
-    parser.add_argument('-v', '--verbose', action="store_true",
-                        help="""Prints ROUGE logs""")
-    parser.add_argument('-a', '--args', help="ROUGE Arguments")
-    parser.add_argument('-s', '--saveto', dest="saveto", help="File to save scores")
-    parser.add_argument('-e', '--eos', dest="eos", default='.',
-                        help="""End of sentence separator (for multisentence).
-                            Default: \".\" """)
-    args = parser.parse_args()
 
-    ref_path = args.reference
-    summ_path = args.summary
-    rouge_args = args.args
-    verbose = args.verbose
-    saveto = args.saveto
+def run(summ_path,
+        ref_path,
+        rouge_args=None,
+        verbose=False,
+        saveto=None,
+        eos="."):
 
     if saveto is not None:
         saveto = open(saveto, 'w')
@@ -83,6 +71,30 @@ def main():
 
     utils.tee(saveto, output)
     print("Elapsed time: %.3f seconds" % (time() - stime))
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Calculating ROUGE score between two files (line-by-line)")
+    parser.add_argument("summary", help="Path of summary file")
+    parser.add_argument("reference", help="Path of references file")
+    parser.add_argument('-v', '--verbose', action="store_true",
+                        help="""Prints ROUGE logs""")
+    parser.add_argument('-a', '--args', help="ROUGE Arguments")
+    parser.add_argument('-s', '--saveto', dest="saveto",
+                        help="File to save scores")
+    parser.add_argument('-e', '--eos', dest="eos", default='.',
+                        help="""End of sentence separator (for multisentence).
+                            Default: \".\" """)
+    args = parser.parse_args()
+
+    run(args.reference,
+        args.summary,
+        args.args,
+        args.verbose,
+        args.saveto,
+        args.eos)
+
 
 if __name__ == '__main__':
     main()

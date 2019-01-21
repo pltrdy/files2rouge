@@ -2,9 +2,12 @@
 ## Motivations
 Given two files with the same number of lines, `files2rouge` calculates the average ROUGE scores of each sequence (=line). Each sequence may contain multiple sentences. In this case, the end of sentence string must be passed using the `--eos` flag (default: "."). Running `files2rouge` with a wrong eos delimiter may lead to incorrect ROUGE-L score.
 
+
+You may also be interested in a Python implementation (instead of a wrapper): <https://github.com/pltrdy/rouge>.
+
 ```shell
-$ files2rouge -h
-usage: files2rouge [-h] [-v] [-s SAVETO] [-e EOS] summary reference
+$ files2rouge --help
+usage: files2rouge [-h] [-v] [-a ARGS] [-s SAVETO] [-e EOS] summary reference
 
 Calculating ROUGE score between two files (line-by-line)
 
@@ -15,6 +18,7 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -v, --verbose         Prints ROUGE logs
+  -a ARGS, --args ARGS  ROUGE Arguments
   -s SAVETO, --saveto SAVETO
                         File to save scores
   -e EOS, --eos EOS     End of sentence separator (for multisentence).
@@ -64,7 +68,12 @@ Running ROUGE...
 1 ROUGE-L Average_F: 0.25142 (95%-conf.int. 0.22741 - 0.27533)
 
 Elapsed time: 0.458 secondes
+```
 
+## Call `files2rouge` from Python
+```
+import files2rouge
+files2rouge.run(hyp_path, ref_path)
 ```
 
 ## ROUGE Args
