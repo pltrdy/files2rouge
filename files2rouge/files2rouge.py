@@ -43,26 +43,26 @@ def run(summ_path,
     print("Preparing documents...")
     utils.mkdirs([sys_root, model_root])
     utils.split_files(model_file=ref_path,
-                system_file=summ_path,
-                model_dir=model_root,
-                system_dir=sys_root,
-                eos=args.eos)
+                      system_file=summ_path,
+                      model_dir=model_root,
+                      system_dir=sys_root,
+                      eos=eos)
     print("Running ROUGE...")
     log_level = logging.ERROR if not verbose else None
     r = pyrouge.Rouge155(rouge_dir=os.path.dirname(s.data['ROUGE_path']),
                          log_level=log_level)
     r.system_dir = sys_root
     r.model_dir = model_root
-    r.system_filename_pattern = 's.(\d+).txt'
+    r.system_filename_pattern = r's.(\d+).txt'
     r.model_filename_pattern = 'm.[A-Z].#ID#.txt'
     data_arg = "-e %s" % s.data['ROUGE_data']
 
     if not rouge_args:
         rouge_args = [
-                  '-c', 95,
-                  '-r', 1000,
-                  '-n', 2,
-                  '-a']
+            '-c', 95,
+            '-r', 1000,
+            '-n', 2,
+            '-a']
         rouge_args_str = " ".join([str(_) for _ in rouge_args])
     else:
         rouge_args_str = rouge_args
