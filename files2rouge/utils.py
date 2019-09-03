@@ -25,6 +25,7 @@ def split_files(model_file, system_file, model_dir, system_dir, eos="."):
         split_sen = " .\n".join(line.split(" %s " % eos))
         print(split_sen, end="", file=f)
 
+    model_count = 0
     with open(model_file) as fmodel:
         for (i, line) in enumerate(fmodel):
             if not line:
@@ -32,9 +33,11 @@ def split_files(model_file, system_file, model_dir, system_dir, eos="."):
             if len(line) == 0:
                 continue
 
+            model_count += 1
             with open("%s/m.A.%d.txt" % (model_dir, i), "w") as f:
                 outputs(line, f)
 
+    system_count = 0
     with open(system_file) as fsystem:
         for (i, line) in enumerate(fsystem):
             if not line:
@@ -42,5 +45,9 @@ def split_files(model_file, system_file, model_dir, system_dir, eos="."):
             if len(line) == 0:
                 continue
 
+            system_count += 1
             with open("%s/s.%d.txt" % (system_dir, i), "w") as f:
                 outputs(line, f)
+    if model_count != system_count:
+        raise ValueError("Model and System line counts must match, %d != %d"
+                         % (model_count, system_count))
