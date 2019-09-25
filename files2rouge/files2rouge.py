@@ -28,7 +28,8 @@ def run(summ_path,
         rouge_args=None,
         verbose=False,
         saveto=None,
-        eos="."):
+        eos=".",
+        ignore_empty=False):
 
     if saveto is not None:
         saveto = open(saveto, 'w')
@@ -46,7 +47,8 @@ def run(summ_path,
                       system_file=summ_path,
                       model_dir=model_root,
                       system_dir=sys_root,
-                      eos=eos)
+                      eos=eos,
+                      ignore_empty=ignore_empty)
     print("Running ROUGE...")
     log_level = logging.ERROR if not verbose else None
     r = pyrouge.Rouge155(rouge_dir=os.path.dirname(s.data['ROUGE_path']),
@@ -86,6 +88,7 @@ def main():
     parser.add_argument('-e', '--eos', dest="eos", default='.',
                         help="""End of sentence separator (for multisentence).
                             Default: \".\" """)
+    parser.add_argument("-i", "--ignore_empty", action="store_true")
     args = parser.parse_args()
 
     run(args.reference,
@@ -93,7 +96,8 @@ def main():
         args.args,
         args.verbose,
         args.saveto,
-        args.eos)
+        args.eos,
+        args.ignore_empty)
 
 
 if __name__ == '__main__':
