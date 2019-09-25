@@ -20,30 +20,46 @@ def tee(saveto, *args, **kwargs):
         print(file=saveto, *args, **kwargs)
 
 
-def split_files(model_file, system_file, model_dir, system_dir, eos="."):
+def split_files(model_file, system_file, model_dir, system_dir,
+                ignore_empty=False, eos="."):
     def outputs(line, f):
         split_sen = " .\n".join(line.split(" %s " % eos))
         print(split_sen, end="", file=f)
 
     model_count = 0
+    lines_to_ignore = []
+
     with open(model_file) as fmodel:
         for (i, line) in enumerate(fmodel):
+
             if not line:
                 break
-            if len(line) == 0:
-                continue
+            if line == "\n":
+                if ignore_empty:
+                    lines_to_ignore.append(i)
+                    continue
+                else:
+                    raise ValueError("Empty hypothesis at line %d."
+                                     " Use `--ignore_empty` to ignore it"
+                                     % (i+1))
 
             model_count += 1
             with open("%s/m.A.%d.txt" % (model_dir, i), "w") as f:
                 outputs(line, f)
 
     system_count = 0
+    line_to_ignore_it = iter(lines_to_ignore)
+    line_to_ignore = next(line_to_ignore_it, -1)
+
     with open(system_file) as fsystem:
         for (i, line) in enumerate(fsystem):
             if not line:
                 break
-            if len(line) == 0:
+            if i == line_to_ignore:
+                line_to_ignore = next(line_to_ignore_it, -1)
                 continue
+            if line == "\n":
+                raise ValueError("Empty system at line %d" % (i+1))
 
             system_count += 1
             with open("%s/s.%d.txt" % (system_dir, i), "w") as f:
