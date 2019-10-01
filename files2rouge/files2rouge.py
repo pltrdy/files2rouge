@@ -29,7 +29,8 @@ def run(summ_path,
         verbose=False,
         saveto=None,
         eos=".",
-        ignore_empty=False):
+        ignore_empty=False,
+        stemming=False):
 
     if saveto is not None:
         saveto = open(saveto, 'w')
@@ -66,6 +67,9 @@ def run(summ_path,
             '-r', 1000,
             '-n', 2,
             '-a']
+        if stemming:
+            rouge_args.append("-m")
+
         rouge_args_str = " ".join([str(_) for _ in rouge_args])
     else:
         rouge_args_str = rouge_args
@@ -79,8 +83,8 @@ def run(summ_path,
 def main():
     parser = argparse.ArgumentParser(
         description="Calculating ROUGE score between two files (line-by-line)")
-    parser.add_argument("summary", help="Path of summary file")
     parser.add_argument("reference", help="Path of references file")
+    parser.add_argument("summary", help="Path of summary file")
     parser.add_argument('-v', '--verbose', action="store_true",
                         help="""Prints ROUGE logs""")
     parser.add_argument('-a', '--args', help="ROUGE Arguments")
@@ -89,6 +93,7 @@ def main():
     parser.add_argument('-e', '--eos', dest="eos", default='.',
                         help="""End of sentence separator (for multisentence).
                             Default: \".\" """)
+    parser.add_argument("-m", "--stemming", action="store_true")
     parser.add_argument("-i", "--ignore_empty", action="store_true")
     args = parser.parse_args()
 
@@ -98,7 +103,8 @@ def main():
         args.verbose,
         args.saveto,
         args.eos,
-        args.ignore_empty)
+        args.ignore_empty,
+        args.stemming)
 
 
 if __name__ == '__main__':
