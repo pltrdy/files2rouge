@@ -67,3 +67,4 @@ def split_files(model_file, system_file, model_dir, system_dir,
     if model_count != system_count:
         raise ValueError("Model and System line counts must match, %d != %d"
                          % (model_count, system_count))
+    return lines_to_ignore

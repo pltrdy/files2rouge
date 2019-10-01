@@ -41,14 +41,15 @@ def run(summ_path,
     sys_root, model_root = [os.path.join(dirpath, _)
                             for _ in ["system", "model"]]
 
-    print("Preparing documents...")
+    print("Preparing documents...", end=" ")
     utils.mkdirs([sys_root, model_root])
-    utils.split_files(model_file=ref_path,
-                      system_file=summ_path,
-                      model_dir=model_root,
-                      system_dir=sys_root,
-                      eos=eos,
-                      ignore_empty=ignore_empty)
+    ignored = utils.split_files(model_file=ref_path,
+                                system_file=summ_path,
+                                model_dir=model_root,
+                                system_dir=sys_root,
+                                eos=eos,
+                                ignore_empty=ignore_empty)
+    print("%d line(s) ignored" % len(ignored))
     print("Running ROUGE...")
     log_level = logging.ERROR if not verbose else None
     r = pyrouge.Rouge155(rouge_dir=os.path.dirname(s.data['ROUGE_path']),
