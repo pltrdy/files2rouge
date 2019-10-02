@@ -31,10 +31,6 @@ def run(summ_path,
         eos=".",
         ignore_empty=False,
         stemming=False):
-
-    if saveto is not None:
-        saveto = open(saveto, 'w')
-
     s = settings.Settings()
     s._load()
     stime = time()
@@ -75,6 +71,9 @@ def run(summ_path,
         rouge_args_str = rouge_args
     rouge_args_str = "%s %s" % (data_arg, rouge_args_str)
     output = r.convert_and_evaluate(rouge_args=rouge_args_str)
+
+    if saveto is not None:
+        saveto = open(saveto, 'w')
 
     utils.tee(saveto, output)
     print("Elapsed time: %.3f seconds" % (time() - stime))
