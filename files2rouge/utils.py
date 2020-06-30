@@ -23,7 +23,7 @@ def tee(saveto, *args, **kwargs):
 def split_files(model_file, system_file, model_dir, system_dir,
                 ignore_empty=False, eos="."):
     def outputs(line, f):
-        split_sen = " .\n".join(line.split(" %s " % eos))
+        split_sen = " .\n".join(line.split(" %s" % eos))
         print(split_sen, end="", file=f)
 
     model_count = 0
