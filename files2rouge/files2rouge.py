@@ -50,7 +50,8 @@ def run(summ_path,
     print("Running ROUGE...")
     log_level = logging.ERROR if not verbose else None
     r = pyrouge.Rouge155(rouge_dir=os.path.dirname(s.data['ROUGE_path']),
-                         log_level=log_level)
+                         log_level=log_level,
+                         stemming=stemming)
     r.system_dir = sys_root
     r.model_dir = model_root
     r.system_filename_pattern = r's.(\d+).txt'
@@ -63,13 +64,11 @@ def run(summ_path,
             '-r', 1000,
             '-n', 2,
             '-a']
-        if stemming:
-            rouge_args.append("-m")
-
         rouge_args_str = " ".join([str(_) for _ in rouge_args])
     else:
         rouge_args_str = rouge_args
     rouge_args_str = "%s %s" % (data_arg, rouge_args_str)
+    
     output = r.convert_and_evaluate(rouge_args=rouge_args_str)
 
     if saveto is not None:
