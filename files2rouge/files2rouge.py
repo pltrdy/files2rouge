@@ -95,8 +95,8 @@ def main():
     parser.add_argument("-i", "--ignore_empty", action="store_true")
     args = parser.parse_args()
 
-    run(args.reference,
-        args.summary,
+    run(args.summary,
+        args.reference,
         args.args,
         args.verbose,
         args.saveto,
