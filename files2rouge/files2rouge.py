@@ -30,7 +30,7 @@ def run(summ_path,
         saveto=None,
         eos=".",
         ignore_empty=False,
-        stemming=False):
+        stemming=True):
     s = settings.Settings()
     s._load()
     stime = time()
@@ -68,7 +68,7 @@ def run(summ_path,
     else:
         rouge_args_str = rouge_args
     rouge_args_str = "%s %s" % (data_arg, rouge_args_str)
-    
+
     output = r.convert_and_evaluate(rouge_args=rouge_args_str)
 
     if saveto is not None:
@@ -91,18 +91,26 @@ def main():
     parser.add_argument('-e', '--eos', dest="eos", default='.',
                         help="""End of sentence separator (for multisentence).
                             Default: \".\" """)
-    parser.add_argument("-m", "--stemming", action="store_true")
+    parser.add_argument("-m", "--stemming", action="store_true",
+                        help="DEPRECATED: stemming is now default behavior")
+    parser.add_argument("-nm", "--no_stemming", action="store_true",
+                        help="Switch off stemming")
     parser.add_argument("-i", "--ignore_empty", action="store_true")
     args = parser.parse_args()
 
+    if args.stemming:
+        raise ValueError(
+            """files2rouge uses stemming by default so --stemming is
+            deprecated. You can turn it off with -nm/--no_stemming""")
+
     run(args.summary,
         args.reference,
-        args.args,
-        args.verbose,
-        args.saveto,
-        args.eos,
-        args.ignore_empty,
-        args.stemming)
+        rouge_args=args.args,
+        verbose=args.verbose,
+        saveto=args.saveto,
+        eos=args.eos,
+        ignore_empty=args.ignore_empty,
+        stemming=not args.no_stemming)
 
 
 if __name__ == '__main__':

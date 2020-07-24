@@ -24,7 +24,8 @@ optional arguments:
                         File to save scores
   -e EOS, --eos EOS     End of sentence separator (for multisentence).
                         Default: "."
-  -m, --stemming
+  -m, --stemming        DEPRECATED: stemming is now default behavior
+  -nm, --no_stemming    Switch off stemming
   -i, --ignore_empty
 ```
 
