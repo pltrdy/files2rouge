@@ -5,15 +5,16 @@ Given two files with the same number of lines, `files2rouge` calculates the aver
 
 You may also be interested in a Python implementation (instead of a wrapper): <https://github.com/pltrdy/rouge>.
 
-```shell
+```bash
 $ files2rouge --help
-usage: files2rouge [-h] [-v] [-a ARGS] [-s SAVETO] [-e EOS] summary reference
+usage: files2rouge [-h] [-v] [-a ARGS] [-s SAVETO] [-e EOS] [-m] [-i]
+                   reference summary
 
 Calculating ROUGE score between two files (line-by-line)
 
 positional arguments:
-  summary               Path of summary file
   reference             Path of references file
+  summary               Path of summary file
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -23,6 +24,8 @@ optional arguments:
                         File to save scores
   -e EOS, --eos EOS     End of sentence separator (for multisentence).
                         Default: "."
+  -m, --stemming
+  -i, --ignore_empty
 ```
 
 ## Getting Started
@@ -44,7 +47,7 @@ python setup.py install
 
 **2) Run `files2rouge.py`** 
 ```bash
-files2rouge summaries.txt references.txt
+files2rouge references.txt summaries.txt 
 ```
 
 **Outputs:**
@@ -80,7 +83,7 @@ files2rouge.run(hyp_path, ref_path)
 One can specify which ROUGE args to use using the flag `--args` (or `-a`).    
 The default behavior is equivalent to: 
 ```
-files2rouge summary.txt reference.txt -a "-c 95 -r 1000 -n 2 -a" # be sure to write args betwen double-quotes
+files2rouge reference.txt summary.txt -a "-c 95 -r 1000 -n 2 -a" # be sure to write args betwen double-quotes
 ```
 You can find more informations about these arguments [here](./files2rouge/RELEASE-1.5.5/README.txt)
 
