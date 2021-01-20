@@ -39,7 +39,7 @@ def split_files(model_file, system_file, model_dir, system_dir,
                     lines_to_ignore.append(i)
                     continue
                 else:
-                    raise ValueError("Empty hypothesis at line %d."
+                    raise ValueError("Empty reference at line %d."
                                      " Use `--ignore_empty` to ignore it"
                                      % (i+1))
 
@@ -59,7 +59,7 @@ def split_files(model_file, system_file, model_dir, system_dir,
                 line_to_ignore = next(line_to_ignore_it, -1)
                 continue
             if line == "\n":
-                raise ValueError("Empty system at line %d" % (i+1))
+                raise ValueError("Empty summary at line %d" % (i+1))
 
             system_count += 1
             with open("%s/s.%d.txt" % (system_dir, i), "w") as f:
