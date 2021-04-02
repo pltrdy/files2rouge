@@ -29,7 +29,8 @@ def run(summ_path,
         verbose=False,
         saveto=None,
         eos=".",
-        ignore_empty=False,
+        ignore_empty_reference=False,
+        ignore_empty_summary=False,
         stemming=True):
     s = settings.Settings()
     s._load()
@@ -41,12 +42,13 @@ def run(summ_path,
 
         print("Preparing documents...", end=" ")
         utils.mkdirs([sys_root, model_root])
-        ignored = utils.split_files(model_file=ref_path,
-                                    system_file=summ_path,
+        ignored = utils.split_files(model_path=ref_path,
+                                    system_path=summ_path,
                                     model_dir=model_root,
                                     system_dir=sys_root,
                                     eos=eos,
-                                    ignore_empty=ignore_empty)
+                                    ignore_empty_reference=ignore_empty_reference,
+                                    ignore_empty_summary=ignore_empty_summary)
         print("%d line(s) ignored" % len(ignored))
         print("Running ROUGE...")
         log_level = logging.ERROR if not verbose else None
@@ -96,7 +98,8 @@ def main():
                         help="DEPRECATED: stemming is now default behavior")
     parser.add_argument("-nm", "--no_stemming", action="store_true",
                         help="Switch off stemming")
-    parser.add_argument("-i", "--ignore_empty", action="store_true")
+    parser.add_argument("-ir", "--ignore_empty_reference", action="store_true")
+    parser.add_argument("-is", "--ignore_empty_summary", action="store_true")
     args = parser.parse_args()
 
     if args.stemming:
@@ -110,7 +113,8 @@ def main():
         verbose=args.verbose,
         saveto=args.saveto,
         eos=args.eos,
-        ignore_empty=args.ignore_empty,
+        ignore_empty_reference=args.ignore_empty_reference,
+        ignore_empty_summary=args.ignore_empty_summary,
         stemming=not args.no_stemming)
 
 
