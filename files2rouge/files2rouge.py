@@ -23,15 +23,29 @@ import logging
 import argparse
 
 
+DEFAULT_ROUGE_N = 2
+
+
 def run(summ_path,
         ref_path,
         rouge_args=None,
         verbose=False,
         saveto=None,
+        rouge_n=DEFAULT_ROUGE_N,
+        no_rouge_l=False,
         eos=".",
         ignore_empty_reference=False,
         ignore_empty_summary=False,
         stemming=True):
+
+    if rouge_args is not None:
+        if rouge_n != DEFAULT_ROUGE_N:
+            raise ValueError("'rouge_n' should not be set with 'rouge_args'")
+
+        if no_rouge_l:
+            raise ValueError(
+                "'no_rouge_l' should not be set with 'rouge_args'")
+
     s = settings.Settings()
     s._load()
     stime = time()
@@ -65,8 +79,11 @@ def run(summ_path,
             rouge_args = [
                 '-c', 95,
                 '-r', 1000,
-                '-n', 2,
+                '-n', rouge_n,
                 '-a']
+            if no_rouge_l:
+                rouge_args.append("-x")
+
             rouge_args_str = " ".join([str(_) for _ in rouge_args])
         else:
             rouge_args_str = rouge_args
@@ -88,6 +105,10 @@ def main():
     parser.add_argument("summary", help="Path of summary file")
     parser.add_argument('-v', '--verbose', action="store_true",
                         help="""Prints ROUGE logs""")
+    parser.add_argument('-n', '--rouge_n', type=int, default=DEFAULT_ROUGE_N,
+                        help="Maximum n_gram size to consider")
+    parser.add_argument('-nol', '--no_rouge_l', action="store_true",
+                        help="Do not calculate ROUGE-L")
     parser.add_argument('-a', '--args', help="ROUGE Arguments")
     parser.add_argument('-s', '--saveto', dest="saveto",
                         help="File to save scores")
@@ -110,6 +131,8 @@ def main():
     run(args.summary,
         args.reference,
         rouge_args=args.args,
+        rouge_n=args.rouge_n,
+        no_rouge_l=args.no_rouge_l,
         verbose=args.verbose,
         saveto=args.saveto,
         eos=args.eos,
