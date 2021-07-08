@@ -12,7 +12,10 @@ from six.moves import input
 
 
 def copy_rouge():
-    home = os.environ['HOME']
+    if 'HOME' not in os.environ:
+        home = os.environ['HOMEPATH']
+    else:
+        home = os.environ['HOME']
 
     src_rouge_root = "./files2rouge/RELEASE-1.5.5/"
 
